@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #FORMS {
+            padding: 20px;
+            border: 1px solid black;
+            border-radius: 20px;
+            background-color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-custom {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <div id="FORMS" class="mx-auto col-md-6">
+        <div class="form-group">
+            <label for="FullName">Full Name</label>
+            <input type="text" class="form-control" id="FullName">
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username">
+        </div>
+        <div class="form-group">
+            <label for="pass">Password</label>
+            <input type="password" class="form-control" id="pass">
+        </div>
+        <button class="btn btn-primary btn-custom" id="signUpBtn">Sign Up</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var accountData = localStorage.getItem('account');
+            if (accountData == null) {
+                console.log("No local Data");
+                var id = 0;
+                var accounts = [];
+            } else {
+                console.log("Local Data loaded");
+                accounts = JSON.parse(accountData); 
+                var id = accounts.length; 
+            }
+            $("#signUpBtn").click(function(){
+                var name = $("#FullName").val();
+                var username = $("#username").val();
+                var pass = $("#pass").val();
+                var newAccount = {"Name": name, "username": username, "password": pass};
+                if(!name&&!username&&!pass){
+                    alert("Please fill all details")
+                }else{
+                accounts.push(newAccount);
+                localStorage.setItem('account', JSON.stringify(accounts));
+
+                alert("Sign up successful! You can now log in.");window.location.href = 'index.html';
+            }
+            });
+        });
+    </script>
+</body>
+</html>
 
