@@ -25,18 +25,18 @@
         $(document).ready(function () {
             var id=localStorage.getItem("id")
             var pass=localStorage.getItem("pass")
-            if((id==null)&(pass==null)){
-                alert("Redirect to Register page");
-                window.location.href='register.html'
-            }
+            
 
             $('button').click(function(){
                 var idcheck=$('#id').val();
                 var passcheck=$('#pass').val();
-                if((id==idcheck)&(pass==passcheck)){
+                if(id!==idcheck){
+                alert("Login unsuccessful. Redirect to register page");
+                window.location.href='register.html'
+                }else if((id==idcheck)&(pass==passcheck)){
                     $('p').html("");  
                     alert("Login successful. Redirect to APP page");
-                window.location.href='reverse.html'
+                window.location.href='pagename'
                 }else{
                     $('p').html("Wrong id or password. Login unsuccessful");
                 }
