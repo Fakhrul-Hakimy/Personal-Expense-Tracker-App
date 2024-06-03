@@ -22,10 +22,15 @@
             margin-bottom: 15px;
         }
 
+        .btn-group-custom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .btn-custom {
-            display: block;
-            width: 100%;
-            margin-top: 20px;
+            width: 200px; /* Adjust the width as needed */
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -47,10 +52,15 @@
                 <input type="text" class="form-control" id="desc">
             </div>
             <div class="form-group">
-                <label for="Test_DatetimeLocal">DATE</label>
+                <label for="DatetimeLocal">DATE</label>
                 <input type="datetime-local" class="form-control" id="DatetimeLocal">
             </div>
-            <button class="btn btn-primary btn-custom" id="saveBTN">Save</button>
+            <div class="text-center">
+                <button class="btn btn-primary btn-custom" id="saveBTN">Save</button>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
         </div>
     </div>
 
@@ -58,7 +68,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
-            
+            var user = localStorage.getItem('LoginUsername');
+    
+            if (user == null) {
+                alert("No login record found. Redirecting to Login Page...");
+                window.location.href = 'index.html';
+                
+            } else {
+                $('#loginStatus').html("You are currently logged in as " + user);    
+            }
             var expense = localStorage.getItem('expenseData');
             if (expense == null) {
                 console.log("No local Data");
@@ -66,25 +84,28 @@
                 var expenseList = [];
             } else {
                 console.log("Local Data loaded");
-                expenseList = JSON.parse(expense); // Parse the JSON string to an array
+                expenseList = JSON.parse(expense);
                 console.log(expenseList);
-                var id = expenseList.length; // Initialize id based on the existing data length
+                var id = expenseList.length;
             }
             $("#saveBTN").click(function () {
-                console.log("btn")
-
+                console.log("btn");
 
                 var name = $('#name').val();
                 var price = $('#price').val();
                 var desc = $('#desc').val();
-                var Date = $('#DatetimeLocal').val();
+                var date = $('#DatetimeLocal').val();
                 console.log(id);
-                var newExpense={"Name":name,"price":price,"desc":desc,"Date":Date,}
-                expenseList[id]=newExpense;
-                id = id+1;
-                localStorage.setItem('expenseData',JSON.stringify(expenseList));
-                console.log("Data saved")
-            })
+                var newExpense = {"Name": name, "price": price, "desc": desc, "Date": date};
+                expenseList[id] = newExpense;
+                id = id + 1;
+                localStorage.setItem('expenseData', JSON.stringify(expenseList));
+                console.log("Data saved");
+            });
+
+            $("#HomeBtn").click(function () {
+                window.location.href = 'main.html';
+            });
         });
     </script>
 </body>

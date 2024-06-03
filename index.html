@@ -81,14 +81,13 @@
                                 isValid = true;
                                 var name = accounts[i].Name; // Use "Name" here
                                 localStorage.setItem('LoginUsername', name);
-                                alert(name);
                                 break;
                             }
                         }
                     }
     
                     if (isValid) {
-                        alert("Login successful. Redirecting to Game Page...");
+                        alert("Login successful. Redirecting to Main Menu...");
                         window.location.href = 'main.html';
                     } else if (userExists) {
                         alert("Invalid password.");
