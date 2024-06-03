@@ -79,7 +79,7 @@
                             userExists = true;
                             if (accounts[i].password === pass) {
                                 isValid = true;
-                                localStorage.setItem('LoginUsername', JSON.stringify(accounts[i].name));
+                                localStorage.setItem('LoginUsername',accounts[i].name);
                                 break;
                             }
                         }
