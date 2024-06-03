@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <h1>Login</h1>
+    <label >Name</label>
+    <input id="id" type="input"> <br><br>
+    <label  >Password</label>
+    <input id="pass" type="password"><br>
+    <br>
+    <button>Login</button>
+    <p></p>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var id=localStorage.getItem("id")
+            var pass=localStorage.getItem("pass")
+            if((id==null)&(pass==null)){
+                alert("Redirect to Register page");
+                window.location.href='Register.html'
+            }
+
+            $('button').click(function(){
+                var idcheck=$('#id').val();
+                var passcheck=$('#pass').val();
+                if((id==idcheck)&(pass==passcheck)){
+                    $('p').html("");  
+                    alert("Login successful. Redirect to APP page");
+                window.location.href='reverse.html'
+                }else{
+                    $('p').html("Wrong id or password. Login unsuccessful");
+                }
+            })
+            
+
+            })
+
+
+        
+    </script>
+
+</body>
+
+</html>
