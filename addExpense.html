@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #FORMS {
+            padding: 20px;
+            border: 1px solid black;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-custom {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>EXPENSE TRACKER</h1>
+        <div id="FORMS" class="mx-auto col-md-6">
+            <div class="form-group">
+                <label for="name">NAME</label>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <div class="form-group">
+                <label for="price">PRICE</label>
+                <input type="text" class="form-control" id="price">
+            </div>
+            <div class="form-group">
+                <label for="desc">DESCRIPTION</label>
+                <input type="text" class="form-control" id="desc">
+            </div>
+            <div class="form-group">
+                <label for="Test_DatetimeLocal">DATE</label>
+                <input type="datetime-local" class="form-control" id="DatetimeLocal">
+            </div>
+            <button class="btn btn-primary btn-custom" id="saveBTN">Save</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            
+            var expense = localStorage.getItem('expenseData');
+            if (expense == null) {
+                console.log("No local Data");
+                var id = 0;
+                var expenseList = [];
+            } else {
+                console.log("Local Data loaded");
+                expenseList = JSON.parse(expense); // Parse the JSON string to an array
+                console.log(expenseList);
+                var id = expenseList.length; // Initialize id based on the existing data length
+            }
+            $("#saveBTN").click(function () {
+                console.log("btn")
+
+
+                var name = $('#name').val();
+                var price = $('#price').val();
+                var desc = $('#desc').val();
+                var Date = $('#DatetimeLocal').val();
+                console.log(id);
+                var newExpense={"Name":name,"price":price,"desc":desc,"Date":Date,}
+                expenseList[id]=newExpense;
+                id = id+1;
+                localStorage.setItem('expenseData',JSON.stringify(expenseList));
+                console.log("Data saved")
+            })
+        });
+    </script>
+</body>
+
+</html>
