@@ -64,28 +64,38 @@
                 accounts = JSON.parse(accountData);
                 var id = accounts.length; 
             }
+
             $("#loginBTN").click(function(){
                 var user = $("#username").val();
                 var pass = $("#pass").val();
-                if(!user&&!pass){
-                    alert("Please fill all details")
-                }else{
-                var isValid = false;
-                for (var i = 0; i < accounts.length; i++) {
-                    if (accounts[i].username === user && accounts[i].password === pass) {
-                        isValid = true;
-                        break;
+
+                if(!user && !pass){
+                    alert("Please fill all details");
+                } else {
+                    var isValid = false;
+                    var userExists = false;
+                    for (var i = 0; i < accounts.length; i++) {
+                        if (accounts[i].username === user) {
+                            userExists = true;
+                            if (accounts[i].password === pass) {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isValid) {
+                        alert("Login successful. Redirecting to Game Page...");
+                        // Redirect to game page (replace 'gamePage.html' with the actual game page URL)
+                        window.location.href = 'pagename';
+                    } else if (userExists) {
+                        alert("Invalid password.");
+                    } else {
+                        alert("Username not found. Redirecting to Register Page...");
+                        window.location.href = 'register.html';
                     }
                 }
-
-                if (isValid) {
-                    alert("Login successful. Redirecting to Game Page...");
-                    // Redirect to game page (replace 'gamePage.html' with the actual game page URL)
-                    window.location.href = 'pagename';
-                } else {
-                    alert("Invalid username or password.");
-                }
-            }});
+            });
 
             $("#signupBTN").click(function(){
                 window.location.href = 'register.html';
