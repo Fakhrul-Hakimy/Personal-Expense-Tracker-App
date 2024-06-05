@@ -35,8 +35,8 @@
     <p id="loginStatus">A</p>
     <div class="btn-group-custom">
         <button id="addBtn" class="btn btn-primary btn-custom">Add Expense</button>
-        <button class="btn btn-primary btn-custom">Edit Expense</button>
-        <button class="btn btn-primary btn-custom">Delete Expense</button>
+        <button id="editBtn" class="btn btn-primary btn-custom">Edit Expense</button>
+        <button id="delBtn" class="btn btn-primary btn-custom">Delete Expense</button>
         <button class="btn btn-primary btn-custom">View Expense</button>
         <br>
         <button id="logOutBtn" class="btn btn-danger btn-custom">Log Out</button>
@@ -61,6 +61,12 @@
             })
             $("#addBtn").click(function(){
                 window.location.href = 'addExpense.html';
+            })
+            $("#delBtn").click(function(){
+                window.location.href = 'deleteExpense.html';
+            })
+            $("#editBtn").click(function(){
+                window.location.href = 'editExpense.html';
             })
             
         });
