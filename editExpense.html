@@ -80,7 +80,7 @@
         <script>
             $(document).ready(function () {
                 var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
-
+                var expense=JSON.parse(expenseList);
                 function renderExpenses() {
                     var expenseDrop = $('#Name');
                     expenseList.forEach(function (expense, index) {
@@ -95,11 +95,16 @@
                 $('#editBtn').click(function () {
                     var selectedIndex = this.selectedIndex;
                     selectedIndex=selectedIndex-1;
-                    var selectedExpense = expenseList[selectedIndex];
-                    expenseList[selectedIndex].price=$$('#price').val();
-                    expenseList[selectedIndex].pricedesc=$$('#desc').val();
-                    expenseList[selectedIndex].category=$$('#category').val();
+                    
+                    var price=$$('#price').val();
+                    var desc=$$('#desc').val();
+                    var category=$$('#category').val();
+                    expense[selectedIndex].price=price;
+                    expense[selectedIndex].desc=desc;
+                    expense[selectedIndex].category=category;
+
                     localStorage.setItem('expenseData', JSON.stringify(expenseList));
+                    
                 });
 
                 $('#Name').change(function(){
