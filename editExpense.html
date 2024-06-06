@@ -39,8 +39,9 @@
         <h1>EDIT EXPENSE</h1>
         <div id="FORMS" class="mx-auto col-md-6">
             <div class="form-group">
-                <select class="form-control" id="Name" readonly>
-                    <option>Selected Item</option>
+                <label for="Name">SELECT ITEM</label>
+                <select class="form-control" id="Name">
+                    <option value="">Select an Item</option>
                 </select>
             </div>
             <div class="form-group">
@@ -66,71 +67,71 @@
                 </select>
             </div>
 
-                <div class="text-center mt-4">
-                    <button id="editBtn" class="btn btn-primary btn-custom">EDIT</button>
-                </div>
-                <div class="text-center mt-4">
-                    <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
-                </div>
+            <div class="text-center mt-4">
+                <button id="editBtn" class="btn btn-primary btn-custom">EDIT</button>
+            </div>
+            <div class="text-center mt-4">
+                <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
             </div>
         </div>
+    </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
-                var expense=JSON.parse(expenseList);
-                function renderExpenses() {
-                    var expenseDrop = $('#Name');
-                    expenseList.forEach(function (expense, index) {
-                        var option = $('<option></option>').attr("value", index).text(expense.Name);
-                        expenseDrop.append(option);
-                    });
-                }
-                
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
 
-                renderExpenses();
-
-                $('#editBtn').click(function () {
-                    var selectedIndex = this.selectedIndex;
-                    selectedIndex=selectedIndex-1;
-                    
-                    var price=$$('#price').val();
-                    var desc=$$('#desc').val();
-                    var category=$$('#category').val();
-                    expense[selectedIndex].price=price;
-                    expense[selectedIndex].desc=desc;
-                    expense[selectedIndex].category=category;
-
-                    localStorage.setItem('expenseData', JSON.stringify(expense));
-                    
+            function renderExpenses() {
+                var expenseDrop = $('#Name');
+                expenseList.forEach(function (expense, index) {
+                    var option = $('<option></option>').attr("value", index).text(expense.Name);
+                    expenseDrop.append(option);
                 });
+            }
 
-                $('#Name').change(function(){
-                    var selectedIndex = this.selectedIndex;
-                    selectedIndex=selectedIndex-1;
-                    var selectedExpense = expenseList[selectedIndex];
-                    if(selectedIndex==-1){
+            renderExpenses();
+
+            $('#Name').change(function () {
+                var selectedIndex = $(this).val();
+                if (selectedIndex === "") {
                     $('#price').val("");
                     $('#desc').val("");
                     $('#DatetimeLocal').val("");
-                    $('#category').val("");  
-                    }else{
+                    $('#category').val("");
+                } else {
+                    var selectedExpense = expenseList[selectedIndex];
                     $('#price').val(selectedExpense.price);
                     $('#desc').val(selectedExpense.desc);
                     $('#DatetimeLocal').val(selectedExpense.Date);
                     $('#category').val(selectedExpense.category);
                 }
-                    
-
-                })
-
-                $("#HomeBtn").click(function () {
-                    window.location.href = 'main.html';
-                });
             });
-        </script>
+
+            $('#editBtn').click(function () {
+                var selectedIndex = $('#Name').val();
+                if (selectedIndex === "") {
+                    alert("Please select an item to edit.");
+                    return;
+                }
+
+                var price = $('#price').val();
+                var desc = $('#desc').val();
+                var category = $('#category').val();
+
+                expenseList[selectedIndex].price = price;
+                expenseList[selectedIndex].desc = desc;
+                expenseList[selectedIndex].category = category;
+
+                localStorage.setItem('expenseData', JSON.stringify(expenseList));
+                alert("Expense updated successfully.");
+            });
+
+            $("#HomeBtn").click(function () {
+                window.location.href = 'main.html';
+            });
+        });
+    </script>
 </body>
 
 </html>
