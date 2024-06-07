@@ -55,9 +55,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Price</th>
-                    <th>Description</th>
                     <th>Date</th>
-                    <th>Category</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -112,9 +110,7 @@
                     var row = $('<tr></tr>');
                     row.append($('<td></td>').text(expense.Name));
                     row.append($('<td></td>').text(expense.Price));
-                    row.append($('<td></td>').text(expense.Description));
                     row.append($('<td></td>').text(expense.Date));
-                    row.append($('<td></td>').text(expense.Category));
                     row.append($('<td></td>').html('<button class="btn btn-danger btn-delete" data-index="' + index + '">Delete</button>'));
                     expenseTable.append(row);
                 });
