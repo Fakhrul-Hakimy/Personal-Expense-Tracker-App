@@ -23,9 +23,15 @@
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: grey;
+            color: white; /* Optionally change text color to white for better contrast */
         }
 
+        td {
+            background-color: white;
+        }
+
+        
         .btn-custom {
             width: 200px;
             margin-top: 10px;
@@ -42,8 +48,20 @@
         }
 
         body {
-            background-color:lightgrey;
+            background-image: url("https://cdn.sanity.io/images/v69vlxeg/production/b1cdf7a4f434395a9885e8b98e56fa14453d4df4-1200x630.jpg?w=3840&q=75&fit=clip&auto=format");
             background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: auto;
+            margin: 0;
+        }
+
+        .content-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
 
         .chart-container {
@@ -53,11 +71,19 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container content-container">
         <h1>EXPENSE LIST</h1>
         <div class="form-group">
             <label for="monthSelect">Select Month</label>
@@ -103,12 +129,13 @@
             </tbody>
         </table>
         <div class="total-expenses" id="totalExpenses"></div>
-        <div class="text-center mt-4">
-            <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
-        </div>
 
         <div class="chart-container">
             <canvas id="myChart"></canvas>
+        </div>
+        
+        <div class="text-center btn-container">
+            <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
         </div>
     </div>
 
@@ -233,7 +260,7 @@
                                     dataArr.map(data => {
                                         sum += data;
                                     });
-                                    let percentage = (value * 100 / sum).toFixed(2) + "%";
+                                    let percentage = (value                                    * 100 / sum).toFixed(2) + "%";
                                     return percentage;
                                 },
                                 color: 'black', // Change the color here
@@ -257,3 +284,4 @@
 </body>
 
 </html>
+
