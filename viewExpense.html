@@ -40,6 +40,19 @@
             margin-top: 20px;
             font-weight: bold;
         }
+
+        body {
+            background-color:lightgrey;
+            background-size: cover;
+        }
+
+        .chart-container {
+            position: relative;
+            margin-top: 40px;
+            max-width: 400px; /* Add max-width to reduce the size of the chart */
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 
@@ -93,10 +106,16 @@
         <div class="text-center mt-4">
             <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
         </div>
+
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
         $(document).ready(function () {
             // Load user data
@@ -110,6 +129,9 @@
 
             // Load expense data
             var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
+
+            // Chart instance
+            var myChart;
 
             function renderExpenses(expenses) {
                 var expenseTableBody = $('#expenseTableBody');
@@ -143,11 +165,89 @@
                 var selectedCategory = $('#categorySelect').val();
                 var filteredExpenses = filterExpenses(selectedMonth, selectedCategory);
                 renderExpenses(filteredExpenses);
+                updateChart(filteredExpenses);
+            }
+
+            function updateChart(expenses) {
+                var categoryTotals = {
+                    'Food & Beverage': 0,
+                    'Transport': 0,
+                    'Utilities': 0,
+                    'Entertainment': 0,
+                    'Other': 0
+                };
+
+                expenses.forEach(function (expense) {
+                    categoryTotals[expense.Category] += parseFloat(expense.Price.replace('RM', '')) || 0;
+                });
+
+                // Filter out categories with zero expenses
+                var filteredCategories = Object.keys(categoryTotals).filter(category => categoryTotals[category] > 0);
+                var filteredTotals = filteredCategories.map(category => categoryTotals[category]);
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+
+                // Destroy previous chart instance if it exists
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: filteredCategories,
+                        datasets: [{
+                            label: 'Total Expense',
+                            data: filteredTotals,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Expense Categories'
+                            },
+                            datalabels: {
+                                formatter: (value, ctx) => {
+                                    let sum = 0;
+                                    let dataArr = ctx.chart.data.datasets[0].data;
+                                    dataArr.map(data => {
+                                        sum += data;
+                                    });
+                                    let percentage = (value * 100 / sum).toFixed(2) + "%";
+                                    return percentage;
+                                },
+                                color: 'black', // Change the color here
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
             }
 
             $("#monthSelect, #categorySelect").change(updateExpenses);
 
             renderExpenses(expenseList);
+            updateChart(expenseList);
 
             $("#HomeBtn").click(function () {
                 window.location.href = 'main.html';
