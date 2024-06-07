@@ -26,8 +26,19 @@
             background-color: #f2f2f2;
         }
 
-        .btn-edit, .btn-delete {
-            margin: 0 5px;
+        .btn-custom {
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-top: 20px;
+        }
+
+        .total-expenses {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -35,6 +46,35 @@
 <body>
     <div class="container">
         <h1>EXPENSE LIST</h1>
+        <div class="form-group">
+            <label for="monthSelect">Select Month</label>
+            <select class="form-control" id="monthSelect">
+                <option value="all">All</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="categorySelect">Select Category</label>
+            <select class="form-control" id="categorySelect">
+                <option value="all">All</option>
+                <option value="Food & Beverage">Food & Beverage</option>
+                <option value="Transport">Transport</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -43,12 +83,13 @@
                     <th>Description</th>
                     <th>Date</th>
                     <th>Category</th>
-                    
+                    <th>Subcategory</th>
                 </tr>
             </thead>
             <tbody id="expenseTableBody">
             </tbody>
         </table>
+        <div class="total-expenses" id="totalExpenses"></div>
         <div class="text-center mt-4">
             <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
         </div>
@@ -58,26 +99,55 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+            // Load user data
+            var user = localStorage.getItem('LoginUsername');
+            if (user == null) {
+                alert("No login record found. Redirecting to Login Page...");
+                window.location.href = 'index.html';
+            } else {
+                $('#loginStatus').html("You are currently logged in as " + user);
+            }
+
+            // Load expense data
             var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
 
-            function renderExpenses() {
+            function renderExpenses(expenses) {
                 var expenseTableBody = $('#expenseTableBody');
+                var totalExpenses = 0;
                 expenseTableBody.empty();
-                expenseList.forEach(function(expense, index) {
+                expenses.forEach(function (expense) {
                     var row = `<tr>
                         <td>${expense.Name}</td>
-                        <td>${expense.price}</td>
-                        <td>${expense.desc}</td>
+                        <td>${expense.Price}</td>
+                        <td>${expense.Description}</td>
                         <td>${expense.Date}</td>
-                        <td>${expense.category}</td>
-
+                        <td>${expense.Category}</td>
+                        <td>${expense.Subcategory}</td>
                     </tr>`;
                     expenseTableBody.append(row);
+                    totalExpenses += parseFloat(expense.Price.replace('RM', '')) || 0;
+                });
+                $('#totalExpenses').text('Total Expenses: RM ' + totalExpenses.toFixed(2));
+            }
+
+            function filterExpenses(month, category) {
+                return expenseList.filter(function (expense) {
+                    var matchesMonth = month === "all" || expense.Date.substring(5, 7) === month;
+                    var matchesCategory = category === "all" || expense.Category === category;
+                    return matchesMonth && matchesCategory;
                 });
             }
 
-            renderExpenses();
+            function updateExpenses() {
+                var selectedMonth = $('#monthSelect').val();
+                var selectedCategory = $('#categorySelect').val();
+                var filteredExpenses = filterExpenses(selectedMonth, selectedCategory);
+                renderExpenses(filteredExpenses);
+            }
 
+            $("#monthSelect, #categorySelect").change(updateExpenses);
+
+            renderExpenses(expenseList);
 
             $("#HomeBtn").click(function () {
                 window.location.href = 'main.html';
