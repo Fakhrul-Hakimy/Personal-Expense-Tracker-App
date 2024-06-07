@@ -29,7 +29,7 @@
         }
 
         .btn-custom {
-            width: 200px; /* Adjust the width as needed */
+            width: 200px;
             margin-top: 10px;
         }
     </style>
@@ -58,12 +58,18 @@
             <div class="form-group">
                 <label for="category">CATEGORY</label>
                 <select class="form-control" id="category">
-                    <option value="Food">Food</option>
+                    <option value="">Select</option>
+                    <option value="Food & Beverage">Food & Beverage</option>
                     <option value="Transport">Transport</option>
                     <option value="Utilities">Utilities</option>
                     <option value="Entertainment">Entertainment</option>
                     <option value="Other">Other</option>
                 </select>
+            </div>
+            <div class="form-group" id="subcategory-div" style="display: none;">
+                <label for="subcategory">SUBCATEGORY</label>
+                <select class="form-control" id="subcategory"></select>
+                <input type="text" class="form-control" id="subcategory-input" style="display: none;" placeholder="Enter subcategory">
             </div>
             <div class="text-center">
                 <button class="btn btn-primary btn-custom" id="saveBTN">Save</button>
@@ -78,42 +84,87 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+            // Ensure price field is prefixed with RM
+            $('#price').on('input', function () {
+                let value = $(this).val();
+                if (!value.startsWith('RM')) {
+                    $(this).val('RM' + value);
+                }
+            });
+
+            // Subcategory data
+            const subcategories = {
+                "Food & Beverage": ['Asian Food', 'Western Food', 'Cake & Sweet', 'Fruit & Vegetables', 'Coffee', 'Tea', 'Soft Drinks', 'Fruit-based Beverages'],
+                Transport: ['Public Transport', 'Private Transport'],
+                Utilities: ['Electricity', 'Water', 'Internet'],
+                Entertainment: ['Movies', 'Concerts', 'Games', 'Shopping'],
+                Other: []
+            };
+
+            // Handle category change
+            $('#category').change(function () {
+                let selectedCategory = $(this).val();
+                let subcategorySelect = $('#subcategory');
+                let subcategoryInput = $('#subcategory-input');
+                let subcategoryDiv = $('#subcategory-div');
+
+                subcategorySelect.empty();
+                subcategoryInput.hide();
+                subcategorySelect.show();
+
+                if (selectedCategory === 'Other') {
+                    subcategoryInput.show();
+                    subcategorySelect.hide();
+                    subcategoryDiv.show();
+                } else if (subcategories[selectedCategory]) {
+                    subcategories[selectedCategory].forEach(function (subcategory) {
+                        subcategorySelect.append(new Option(subcategory, subcategory));
+                    });
+                    subcategoryDiv.show();
+                } else {
+                    subcategoryDiv.hide();
+                }
+            });
+
+            // Load user data
             var user = localStorage.getItem('LoginUsername');
-    
             if (user == null) {
                 alert("No login record found. Redirecting to Login Page...");
                 window.location.href = 'index.html';
-                
             } else {
-                $('#loginStatus').html("You are currently logged in as " + user);    
+                $('#loginStatus').html("You are currently logged in as " + user);
             }
-            var expense = localStorage.getItem('expenseData');
-            if (expense == null) {
-                console.log("No local Data");
-                var id = 0;
-                var expenseList = [];
-            } else {
-                console.log("Local Data loaded");
-                expenseList = JSON.parse(expense);
-                console.log(expenseList);
-                var id = expenseList.length;
-            }
-            $("#saveBTN").click(function () {
-                console.log("btn");
 
+            // Load expense data
+            var expense = localStorage.getItem('expenseData');
+            var expenseList = expense ? JSON.parse(expense) : [];
+            var id = expenseList.length;
+
+            // Save button handler
+            $("#saveBTN").click(function () {
                 var name = $('#name').val();
                 var price = $('#price').val();
                 var desc = $('#desc').val();
                 var date = $('#DatetimeLocal').val();
-                var category = $('#category').val(); // Get selected category value
-                console.log(id);
-                var newExpense = {"Name": name, "price": price, "desc": desc, "Date": date, "category": category}; // Include category in the new expense object
+                var category = $('#category').val();
+                var subcategory = category === 'Other' ? $('#subcategory-input').val() : $('#subcategory').val();
+
+                var newExpense = {
+                    "Name": name,
+                    "Price": price,
+                    "Description": desc,
+                    "Date": date,
+                    "Category": category,
+                    "Subcategory": subcategory
+                };
                 expenseList[id] = newExpense;
-                id = id + 1;
+                id += 1;
+
                 localStorage.setItem('expenseData', JSON.stringify(expenseList));
                 console.log("Data saved");
             });
 
+            // Home button handler
             $("#HomeBtn").click(function () {
                 window.location.href = 'main.html';
             });
