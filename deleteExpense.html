@@ -29,6 +29,11 @@
         .btn-edit, .btn-delete {
             margin: 0 5px;
         }
+
+        .btn-custom {
+            width: 200px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -58,20 +63,29 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+            // Load user data
+            var user = localStorage.getItem('LoginUsername');
+            if (user == null) {
+                alert("No login record found. Redirecting to Login Page...");
+                window.location.href = 'index.html';
+            } else {
+                $('#loginStatus').html("You are currently logged in as " + user);
+            }
+
+            // Load expense data
             var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
 
             function renderExpenses() {
                 var expenseTableBody = $('#expenseTableBody');
                 expenseTableBody.empty();
-                expenseList.forEach(function(expense, index) {
+                expenseList.forEach(function (expense, index) {
                     var row = `<tr>
                         <td>${expense.Name}</td>
-                        <td>${expense.price}</td>
-                        <td>${expense.desc}</td>
+                        <td>${expense.Price}</td>
+                        <td>${expense.Description}</td>
                         <td>${expense.Date}</td>
-                        <td>${expense.category}</td>
+                        <td>${expense.Category}</td>
                         <td>
-                            
                             <button class="btn btn-danger btn-delete" data-index="${index}">Delete</button>
                         </td>
                     </tr>`;
@@ -80,7 +94,6 @@
             }
 
             renderExpenses();
-
 
             $(document).on('click', '.btn-delete', function () {
                 var index = $(this).data('index');
