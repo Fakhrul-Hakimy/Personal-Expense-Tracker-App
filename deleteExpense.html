@@ -51,11 +51,31 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="expenseTableBody">
+            <tbody id="expenseTable">
             </tbody>
         </table>
         <div class="text-center mt-4">
             <button id="HomeBtn" class="btn btn-danger btn-custom">Home</button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Expense has been successfully deleted!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -76,30 +96,28 @@
             var expenseList = JSON.parse(localStorage.getItem('expenseData')) || [];
 
             function renderExpenses() {
-                var expenseTableBody = $('#expenseTableBody');
-                expenseTableBody.empty();
+                var expenseTable = $('#expenseTable');
+                expenseTable.empty();
                 expenseList.forEach(function (expense, index) {
-                    var row = `<tr>
-                        <td>${expense.Name}</td>
-                        <td>${expense.Price}</td>
-                        <td>${expense.Description}</td>
-                        <td>${expense.Date}</td>
-                        <td>${expense.Category}</td>
-                        <td>
-                            <button class="btn btn-danger btn-delete" data-index="${index}">Delete</button>
-                        </td>
-                    </tr>`;
-                    expenseTableBody.append(row);
+                    var row = $('<tr></tr>');
+                    row.append($('<td></td>').text(expense.Name));
+                    row.append($('<td></td>').text(expense.Price));
+                    row.append($('<td></td>').text(expense.Description));
+                    row.append($('<td></td>').text(expense.Date));
+                    row.append($('<td></td>').text(expense.Category));
+                    row.append($('<td></td>').html('<button class="btn btn-danger btn-delete" data-index="' + index + '">Delete</button>'));
+                    expenseTable.append(row);
                 });
             }
 
             renderExpenses();
 
-            $(document).on('click', '.btn-delete', function () {
+            $('#expenseTable').on('click', '.btn-delete', function () {
                 var index = $(this).data('index');
                 expenseList.splice(index, 1);
                 localStorage.setItem('expenseData', JSON.stringify(expenseList));
                 renderExpenses();
+                $('#successModal').modal('show');
             });
 
             $("#HomeBtn").click(function () {
