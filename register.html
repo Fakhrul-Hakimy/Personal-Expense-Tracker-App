@@ -71,7 +71,7 @@
                 var username = $("#username").val();
                 var pass = $("#pass").val();
                 var newAccount = {"Name": name, "username": username, "password": pass}; // Use "Name" here
-                if (!name && !username && !pass) {
+                if (!name || !username || !pass) {
                     alert("Please fill all details");
                 } else {
                     accounts.push(newAccount);
