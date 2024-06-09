@@ -56,13 +56,16 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
+            //verify existing of account json
             var accountData = localStorage.getItem('account');
             if (accountData == null) {
+                //if no local data create new accounts json
                 console.log("No local Data");
                 var id = 0;
                 var accounts = [];
             } else {
                 console.log("Local Data loaded");
+                //get index for account json
                 accounts = JSON.parse(accountData);
                 var id = accounts.length;
             }
@@ -70,15 +73,15 @@
                 var name = $("#FullName").val();
                 var username = $("#username").val();
                 var pass = $("#pass").val();
-                var newAccount = {"Name": name, "username": username, "password": pass}; // Use "Name" here
-                if (!name || !username || !pass) {
+                var newAccount = {"Name": name, "username": username, "password": pass}; 
+                if (!name || !username || !pass) {//check if all details is fill
                     alert("Please fill all details");
                 } else {
                     accounts.push(newAccount);
-                    localStorage.setItem('account', JSON.stringify(accounts));
+                    localStorage.setItem('account', JSON.stringify(accounts)); //keep data in local storage
     
                     alert("Sign up successful! You can now log in.");
-                    window.location.href = 'index.html';
+                    window.location.href = 'index.html'; //redirect to login page
                 }
             });
         });

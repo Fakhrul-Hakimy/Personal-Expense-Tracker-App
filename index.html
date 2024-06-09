@@ -65,32 +65,35 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
-            var accountData = localStorage.getItem('account');
+            //check account json
+            var accountData = localStorage.getItem('account');//load json account from localstorage
             if (accountData == null) {
+                //create new account json if not existing data.
                 console.log("No local Data");
                 var id = 0;
                 var accounts = [];
             } else {
+                
                 console.log("Local Data loaded");
-                accounts = JSON.parse(accountData);
-                var id = accounts.length;
+                accounts = JSON.parse(accountData); // parse json data to string
+                var id = accounts.length; //get json index
             }
 
             $("#loginBTN").click(function () {
                 var user = $("#username").val();
                 var pass = $("#pass").val();
 
-                if (!user && !pass) {
+                if (!user && !pass) { // check if all details is enter
                     alert("Please fill all details");
                 } else {
                     var isValid = false;
                     var userExists = false;
                     for (var i = 0; i < accounts.length; i++) {
-                        if (accounts[i].username === user) {
+                        if (accounts[i].username === user) { // check if useraccount exist in json
                             userExists = true;
-                            if (accounts[i].password === pass) {
+                            if (accounts[i].password === pass) { //check if account pass same with enter one
                                 isValid = true;
-                                var name = accounts[i].Name; // Use "Name" here
+                                var name = accounts[i].Name; 
                                 localStorage.setItem('LoginUsername', name);
                                 break;
                             }
@@ -99,18 +102,18 @@
 
                     if (isValid) {
                         alert("Login successful. Redirecting to Main Menu...");
-                        window.location.href = 'main.html';
+                        window.location.href = 'main.html'; // redirect to main meu
                     } else if (userExists) {
-                        alert("Invalid password.");
+                        alert("Invalid password."); //show if password is wrong
                     } else {
                         alert("Username not found. Redirecting to Register Page...");
-                        window.location.href = 'register.html';
+                        window.location.href = 'register.html'; //redirect to signup page if user is not in localstorage.
                     }
                 }
             });
 
             $("#signupBTN").click(function () {
-                window.location.href = 'register.html';
+                window.location.href = 'register.html'; // user click button to signup/register page
             });
         });
     </script>
